@@ -24,7 +24,7 @@ AlignConsecutiveDeclarations:
   PadOperators:    false
 AlignConsecutiveMacros:
   Enabled:         true
-  AcrossEmptyLines: false
+  AcrossEmptyLines: true
   AcrossComments:  false
   AlignCompound:   false
   PadOperators:    false
@@ -43,7 +43,7 @@ AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true

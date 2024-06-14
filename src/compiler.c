@@ -42,7 +42,9 @@ typedef struct {
 Parser parser;
 Chunk* compiling_chunk;
 
-static Chunk* current_chunk() { return compiling_chunk; }
+static Chunk* current_chunk() {
+    return compiling_chunk;
+}
 
 static void error_at(Token* token, const char* message) {
     if (parser.panic_mode) return;
@@ -62,9 +64,13 @@ static void error_at(Token* token, const char* message) {
     parser.had_error = true;
 }
 
-static void error(const char* message) { error_at(&parser.previous, message); }
+static void error(const char* message) {
+    error_at(&parser.previous, message);
+}
 
-static void error_at_current(const char* message) { error_at(&parser.current, message); }
+static void error_at_current(const char* message) {
+    error_at(&parser.current, message);
+}
 
 static void advance() {
     parser.previous = parser.current;
@@ -86,14 +92,18 @@ static void consume(TokenType type, const char* message) {
     error_at_current(message);
 }
 
-static void emit_byte(uint8_t byte) { write_chunk(current_chunk(), byte, parser.previous.line); }
+static void emit_byte(uint8_t byte) {
+    write_chunk(current_chunk(), byte, parser.previous.line);
+}
 
 static void emit_bytes(uint8_t byte1, uint8_t byte2) {
     emit_byte(byte1);
     emit_byte(byte2);
 }
 
-static void emit_return() { emit_byte(OP_RETURN); }
+static void emit_return() {
+    emit_byte(OP_RETURN);
+}
 
 static uint8_t make_constant(Value value) {
     int constant = add_constant(current_chunk(), value);
@@ -105,7 +115,9 @@ static uint8_t make_constant(Value value) {
     return (uint8_t)constant;
 }
 
-static void emit_constant(Value value) { emit_bytes(OP_CONSTANT, make_constant(value)); }
+static void emit_constant(Value value) {
+    emit_bytes(OP_CONSTANT, make_constant(value));
+}
 
 static void end_compiler() {
     emit_return();
@@ -160,6 +172,10 @@ static void number() {
     emit_constant(NUMBER_VAL(value));
 }
 
+static void string() {
+    emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
+}
+
 static void unary() {
     TokenType operator_type = parser.previous.type;
 
@@ -192,7 +208,7 @@ ParseRule rules[] = {
     [TOKEN_LESS]          = {NULL,     binary, PREC_COMPARISON},
     [TOKEN_LESS_EQUAL]    = {NULL,     binary, PREC_COMPARISON},
     [TOKEN_IDENTIFIER]    = {NULL,     NULL,   PREC_NONE      },
-    [TOKEN_STRING]        = {NULL,     NULL,   PREC_NONE      },
+    [TOKEN_STRING]        = {string,   NULL,   PREC_NONE      },
     [TOKEN_NUMBER]        = {number,   NULL,   PREC_NONE      },
     [TOKEN_AND]           = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_CLASS]         = {NULL,     NULL,   PREC_NONE      },
@@ -231,9 +247,13 @@ static void parse_precedence(Precedence precedence) {
     }
 }
 
-static ParseRule* get_rule(TokenType type) { return &rules[type]; }
+static ParseRule* get_rule(TokenType type) {
+    return &rules[type];
+}
 
-static void expression() { parse_precedence(PREC_ASSIGNMENT); }
+static void expression() {
+    parse_precedence(PREC_ASSIGNMENT);
+}
 
 bool compile(const char* source, Chunk* chunk) {
     init_scanner(source);
